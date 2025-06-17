@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>X-Reporter</title>
+  <!-- Glitch-like mono font -->
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #517c63;
+      --cream: #f3f0e9;
+      --tan: #e7dfcf;
+      --brown: #ab9c81;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Share Tech Mono', monospace;
+      background-color: var(--cream);
+      color: var(--green);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      width: 100%;
+      background-color: var(--green);
+      color: white;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header img {
+      height: 30px;
+    }
+
+    h1.main-title {
+      font-size: 2.2em;
+      text-align: center;
+      font-family: 'Share Tech Mono', monospace;
+      margin: 20px 0 10px;
+    }
+
+    .sub {
+      font-size: 0.9em;
+      text-align: center;
+      color: var(--brown);
+      margin-bottom: 20px;
+    }
+
+    .container, .report-page {
+      width: 90%;
+      max-width: 400px;
+      margin: auto;
+      text-align: center;
+    }
+
+    input {
+      width: 80%;
+      padding: 10px;
+      border: 1px solid var(--green);
+      border-radius: 5px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 1em;
+    }
+
+    button {
+      background-color: var(--green);
+      color: white;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: var(--brown);
+    }
+
+    .report-page {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .circle-timer {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 8px solid var(--tan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px auto;
+      font-size: 1.8em;
+      font-weight: bold;
+      color: var(--green);
+      background-color: var(--cream);
+    }
+
+    .terminal {
+      background-color: #000;
+      color: #00ff00;
+      width: 90%;
+      max-height: 250px;
+      overflow-y: auto;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 0.9em;
+      margin-top: 10px;
+      font-family: 'Courier New', monospace;
+      text-align: left;
+      position: relative;
+    }
+
+    .terminal::after {
+      content: "_";
+      color: #00ff00;
+      animation: blink 1s steps(2, start) infinite;
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+    }
+
+    @keyframes blink {
+      to {
+        visibility: hidden;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://files.catbox.moe/il3uc8.png" alt="Logo"/>
+    <span>X-Reporter</span>
+  </header>
+
+  <div class="container" id="main-page">
+    <h1 class="main-title">X-Reporter</h1>
+    <div class="sub">this is a banning tool. This tool can send massive reports within 2 minutes</div>
+    <h3>Enter insta Username to Report</h3>
+    <input type="text" id="username" placeholder="Enter instagram username"/>
+    <br>
+    <button onclick="startReport()">Ban insta Account</button>
+  </div>
+
+  <div class="report-page" id="report-page">
+    <h1 class="main-title">Reporting Started</h1>
+    <div class="sub">Wait few seconds...</div>
+    <div class="circle-timer" id="timer">120</div>
+    <div class="terminal" id="terminal"></div>
+  </div>
+
+  <script>
+    let count = 120;
+    let interval;
+    let logs = 1;
+    let terminalDiv = document.getElementById("terminal");
+
+    function startReport() {
+      const username = document.getElementById("username").value.trim();
+      if (!username) {
+        alert("Please enter a username.");
+        return;
+      }
+
+      document.getElementById("main-page").style.display = "none";
+      document.getElementById("report-page").style.display = "flex";
+
+      interval = setInterval(() => {
+        if (count <= 0) {
+          clearInterval(interval);
+        } else {
+          document.getElementById("timer").innerText = count;
+          count--;
+        }
+      }, 2500); // 2.5 seconds per step = 120 steps = 5 mins
+
+      setInterval(() => {
+        let msg = `${username} report sent success ${logs < 10 ? '0' + logs : logs}`;
+        let log = document.createElement("div");
+        log.innerText = msg;
+        terminalDiv.appendChild(log);
+        terminalDiv.scrollTop = terminalDiv.scrollHeight;
+        logs++;
+      }, 3000); // Every 3 sec
+    }
+  </script>
+</body>
+</html>
